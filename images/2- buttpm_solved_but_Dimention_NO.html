@@ -56,14 +56,14 @@
       padding-right: 40px;
       direction: rtl;
       font-size: 36px;
-      font-weight: bold;
-      color: #003366;
-      margin-bottom: 20px;
-      padding: 15px;
-      background: linear-gradient(90deg, #4CAF50, #003366);
-      color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    font-weight: bold;
+    color: #003366;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(90deg, #4CAF50, #003366);
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     @keyframes topTickerMove {
@@ -453,48 +453,44 @@
 
     /* كود حاطه من اجل الشاشات الصغيرة للشريط المتاحرك */
     /* ✅ تصغير الشريط العلوي في الموبايل */
-    @media (max-width: 600px) {
-      .top-ticker {
-        padding: 6px 0;
-      }
+@media (max-width: 600px) {
+  .top-ticker {
+    padding: 6px 0;
+  }
 
-      .top-ticker__inner h1 {
-        font-size: 18px !important;
-        padding-right: 20px;
-      }
+  .top-ticker__inner h1 {
+    font-size: 18px !important;
+    padding-right: 20px;
+  }
 
-      body {
-        --top-ticker-height: 45px;
-        /* تقليل الارتفاع */
-      }
-    }
+  body {
+    --top-ticker-height: 45px; /* تقليل الارتفاع */
+  }
+}
 
-    /* ✅ منع الشريط من تغطية الصورة */
-    .hero-logo-container {
-      margin-top: var(--top-ticker-height);
-      /* مسافة كافية تحت الشريط */
-    }
+/* ✅ منع الشريط من تغطية الصورة */
+.hero-logo-container {
+  margin-top: var(--top-ticker-height); /* مسافة كافية تحت الشريط */
+}
+@media (max-width: 600px) {
+  #resultText {
+    text-align: center;
+    line-height: 1.6;
+  }
 
-    @media (max-width: 600px) {
-      #resultText {
-        text-align: center;
-        line-height: 1.6;
-      }
+  #supportName {
+    display: block;
+    font-size: 30px;
+    margin-bottom: 8px;
+  }
 
-      #supportName {
-        display: block;
-        font-size: 30px;
-        margin-bottom: 8px;
-      }
+  #supportPhrase {
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+  }
+}
 
-      #supportPhrase {
-        font-size: 22px;
-        font-weight: bold;
-        color: #fff;
-      }
-    }
-
-   
   </style>
 </head>
 
@@ -598,7 +594,7 @@
       cropperContainer.style.display = 'none';
       alert("✅ تم قص الصورة بنجاح، اضغط إنشاء كارت الدعم");
     });
-    //  I ADD FOR TEXT
+
     generateBtn.addEventListener('click', function () {
       if (!nameInput.value.trim()) {
         alert("من فضلك اكتب اسمك");
@@ -615,118 +611,50 @@
       const userImg = new Image();
       userImg.src = croppedImageData;
 
-      // دالة مساعدة لتفريغ نص عربي إلى عدة أسطر (بناءً على قياس العرض)
-      function wrapTextCenter(context, text, x, y, maxWidth, lineHeight) {
-        const words = text.split(' ');
-        let line = '';
-        const lines = [];
-        for (let n = 0; n < words.length; n++) {
-          const testLine = line ? (line + ' ' + words[n]) : words[n];
-          const metrics = context.measureText(testLine);
-          if (metrics.width > maxWidth && line) {
-            lines.push(line);
-            line = words[n];
-          } else {
-            line = testLine;
-          }
-        }
-        if (line) lines.push(line);
-        // نرسم السطور من الأعلى لأسفل
-        for (let i = 0; i < lines.length; i++) {
-          context.fillText(lines[i], x, y + (i * lineHeight));
-        }
-        return lines.length;
-      }
-
       bg.onload = () => {
-        // نرسم الخلفية أولاً
         ctx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
         ctx.drawImage(bg, 0, 0, finalCanvas.width, finalCanvas.height);
 
-        // رسم الصورة الشخصية في المكان نفسه كما كان
-        const rectWidth = 185;   // حافظت على الأبعاد اللي عندك
-        const rectHeight = 230;
-        const rectX = 85;
-        const rectY = 495;
-        ctx.drawImage(userImg, rectX, rectY, rectWidth, rectHeight);
+        // موضع الصورة على الكارت
+        const rectWidth = 170;   // عرض الصورة داخل الكارت
+        const rectHeight = 280;  // ارتفاع الصورة
+        const rectX = 60;        // المسافة من يسار الكارت (اضبط إذا لزم الأمر)
+        const rectY = 330;       // المسافة من أعلى الكارت (اضبط لتطابق الصندوق بالضبط)
 
-        // ------- تحديث العناصر المرئية خارج الكانفاس (بدون حذفها) -------
-        const supportName = document.getElementById("supportName");
-        const supportPhrase = document.getElementById("supportPhrase");
-
-        // نص الدعم النهائي
-        const userText = (function (u) {
-          u = (u || '').trim();
-          return u ? `أنا ${u} صوتي للعمدة خالد صقر` : "أنا صوتي للعمدة خالد صقر";
-        })(nameInput.value);
-
-        // نحافظ على ظهور العنصر الأخضر إن أردت (لا نحذفه)
-        if (supportName) supportName.textContent = nameInput.value || "";
-        if (supportPhrase) {
-          // لو شاشة صغيرة اكسر السطر، وإلا اعرض سطر واحد
-          if (window.innerWidth <= 600) {
-            supportPhrase.innerHTML = userText.replace(' في انتخابات مجلس النواب 2025', '');
-          } else {
-            supportPhrase.textContent = userText;
-          }
-        }
-   // تم إلغاء ظهور عبارة الدعم بعد الكارت
-const resultDiv = document.getElementById("resultText");
-if (resultDiv) resultDiv.style.display = "none";
-
-        // ------- رسم النص داخل الكانفاس في الجزء العلوي من الصورة -------
-        // إعدادات الخط (قابلة للتعديل إن أردت حجم أصغر/أكبر)
-        const maxWidth = Math.round(finalCanvas.width * 0.82); // حواف من الجانبين
-        const x = finalCanvas.width / 2;
-        let startY = 90; // إرتفاع بداية النص من أعلى الكانفاس — عدّله لو عايز أعلى/أسفل
-        let lineHeight = 52; // مسافة بين السطور
-
+        // رسم مستطيل الصورة
         ctx.save();
-        ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-        ctx.fillStyle = "#3c9440";
-        ctx.shadowColor = "rgba(0,0,0,0.65)";
-        ctx.shadowBlur = 6;
-
-        // نحاول تعيين حجم الخط بناءً على طول النص (ليكون مناسبًا)
-        // نبدأ بحجم كبير ثم نخفضه لو النص عريض جدًا
-        let fontSize = 48;
-        ctx.font = `bold ${fontSize}px 'Cairo'`;
-        while (ctx.measureText(userText).width > maxWidth && fontSize > 22) {
-          fontSize -= 2;
-          ctx.font = `bold ${fontSize}px 'Cairo'`;
-          lineHeight = Math.round(fontSize * 1.1);
-        }
-
-        // نكتب النص مع التفاف سطور على حدود maxWidth
-        wrapTextCenter(ctx, userText, x, startY, maxWidth, lineHeight);
-
+        ctx.drawImage(userImg, rectX, rectY, rectWidth, rectHeight);
         ctx.restore();
 
-        // عرض الكانفاس وأزرار التحميل والمشاركة كما في كودك
-        finalCanvas.style.display = "block";
-        if (downloadBtn) downloadBtn.style.display = "inline-block";
-        if (shareBtn) shareBtn.style.display = "inline-block";
+      const supportName = document.getElementById("supportName");
+const supportPhrase = document.getElementById("supportPhrase");
 
-        // توليد رابط للصورة النهائية
+supportName.textContent = nameInput.value;
+
+// تقسيم النص تلقائيًا حسب حجم الشاشة
+if (window.innerWidth <= 600) {
+  supportPhrase.innerHTML = `أنا أدعم العمدة خالد صقر في انتخابات<br>مجلس النواب 2025`;
+} else {
+  supportPhrase.textContent = "أنا أدعم العمدة خالد صقر في انتخابات مجلس النواب 2025";
+}
+
+document.getElementById("resultText").style.display = "block";
+
+        finalCanvas.style.display = "block";
+        downloadBtn.style.display = "inline-block";
+        shareBtn.style.display = "inline-block";
         const imgData = finalCanvas.toDataURL("image/png");
-        if (downloadBtn) {
-          downloadBtn.onclick = () => {
-            const link = document.createElement('a');
-            link.href = imgData;
-            link.download = "khaled_support_card.png";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          };
-        }
-        if (shareBtn) {
-          shareBtn.href = "https://www.facebook.com/sharer/sharer.php?u=https://www.facebook.com/share/1A8YXzAtjK/";
-        }
+downloadBtn.onclick = () => {
+  const link = document.createElement('a');
+  link.href = imgData;
+  link.download = "khaled_support_card.png";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+        shareBtn.href = "https://www.facebook.com/sharer/sharer.php?u=https://www.facebook.com/share/1A8YXzAtjK/";
       };
     });
-
-
   </script>
 </body>
 
