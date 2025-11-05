@@ -684,9 +684,13 @@ if (resultDiv) resultDiv.style.display = "none";
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillStyle = "#3c9440";
-        ctx.shadowColor = "rgba(0,0,0,0.65)";
-        ctx.shadowBlur = 6;
+        // from here replace
+        ctx.fillStyle = "#003366";           // اللون الأزرق الغامق المرغوب
+ctx.strokeStyle = "#000000";         // حدود سوداء خفيفة للنص (اختياري)
+ctx.lineWidth = 1.8;                 // سُمك الحدود
+ctx.shadowColor = "rgba(0,0,0,0.4)"; // ظل خفيف تحت الحروف
+ctx.shadowBlur = 5;
+        
 
         // نحاول تعيين حجم الخط بناءً على طول النص (ليكون مناسبًا)
         // نبدأ بحجم كبير ثم نخفضه لو النص عريض جدًا
@@ -730,6 +734,8 @@ if (resultDiv) resultDiv.style.display = "none";
 
 
   </script>
+
+  <noscript> javascript not support</noscript>
 </body>
 
 </html>
